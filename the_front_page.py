@@ -24,7 +24,9 @@ def embed_to_discord(link):
     embed.add_embed_field(name="Link", value= "[Read Full Page Here](" + link + ")", inline=False)
     
     # set image
-    embed.set_image(url=link)
+    with open("out.png", "rb") as f:
+        webhook.add_file(file=f.read(), filename='out.png')
+    embed.set_image(url='attachment://out.png')
 
     # set footer
     embed.set_footer(text="\"All the News That's Fit to Print\"")
