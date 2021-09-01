@@ -40,11 +40,11 @@ def embed_to_discord(link):
 now = datetime.now()
 link = "https://static01.nyt.com/images/" + now.strftime("%Y/%m/%d/") + "nytfrontpage/scan.pdf"
 
-f = open("Paper.pdf", "wb")
+f = open('Paper.pdf', "wb")
 f.write(get(link).content)
 f.close()
 
-pages = convert_from_path('Paper.pdf', 200)
+pages = convert_from_path('Paper.pdf')
 for page in pages:
     page.save('out.png', 'PNG')
 
