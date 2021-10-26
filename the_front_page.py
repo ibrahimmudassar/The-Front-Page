@@ -4,7 +4,7 @@ from datetime import datetime
 import fitz
 from discord_webhook import DiscordEmbed, DiscordWebhook
 from environs import Env  # For environment variables
-from pdf2jpg import pdf2jpg
+# from pdf2jpg import pdf2jpg
 from PIL import Image
 from requests import get, post
 
@@ -56,8 +56,7 @@ f.close()
 doc = fitz.open("Paper.pdf")
 page = doc.loadPage(0)  # number of page
 pix = page.getPixmap()
-output = "out.png"
-pix.writePNG(output)
+pix.writePNG("out.png")
 
 im = Image.open("out.png")
 width, height = im.size
