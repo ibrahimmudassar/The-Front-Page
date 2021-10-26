@@ -12,7 +12,7 @@ env = Env()
 env.read_env()  # read .env file, if it exists
 
 
-def embed_to_discord(link):
+def embed_to_discord():
     # Webhooks to send to
     webhook = DiscordWebhook(url=env.list("WEBHOOKS"))
 
@@ -21,10 +21,6 @@ def embed_to_discord(link):
     day_today = now.strftime(
         "%b. ") + str(int(now.strftime("%d"))) + now.strftime(", %Y")
     embed = DiscordEmbed(title=title, description=day_today, color="000000")
-
-    # Mentioning the link to the article
-    embed.add_embed_field(
-        name="Link", value="[Read Full Page Here](" + link + ")", inline=False)
 
     # set image
     with open("out.png", "rb") as f:
@@ -54,31 +50,38 @@ page = doc.load_page(0)  # first and only page
 pix = page.get_pixmap()
 pix.save("out.png")
 
-im = Image.open("out.png")
-width, height = im.size
+embed_to_discord()
 
-# Setting the points for cropped image
-left = 0
-top = 125
-right = width
-bottom = height
+#
+#   BELOW IS ARCHIVED CODE FOR REFERENCE
+#
 
-im1 = im.crop((left, top, right, bottom))
-im1.save('out.png')
+# CROPPING AN IMAGE
 
+# im = Image.open("out.png")
+# width, height = im.size
+
+# # Setting the points for cropped image
+# left = 0
+# top = 125
+# right = width
+# bottom = height
+
+# im1 = im.crop((left, top, right, bottom))
+# im1.save('out.png')
+
+#   UPLOADING AN IMAGE TO A WEBHOST AND LINKING
 
 # defining the api-endpoint
-API_ENDPOINT = "https://api.imgbb.com/1/upload"
+# API_ENDPOINT = "https://api.imgbb.com/1/upload"
 
 
-with open("out.png", "rb") as file:
-    payload = {
-        "key": env('API_KEY'),
-        "image": base64.b64encode(file.read()),
-    }
-    res = post(API_ENDPOINT, payload)
+# with open("out.png", "rb") as file:
+#     payload = {
+#         "key": env('API_KEY'),
+#         "image": base64.b64encode(file.read()),
+#     }
+#     res = post(API_ENDPOINT, payload)
 
 
-front_page_url = res.json()["data"]["url"]
-
-embed_to_discord(front_page_url)
+# front_page_url = res.json()["data"]["url"]
