@@ -1,5 +1,6 @@
 fitz
 frontend
+pymupdf
 Pillow
 discord_webhook
 environs
