@@ -1,10 +1,12 @@
 import base64
 from datetime import datetime
-from requests import get, post
-from pdf2image import convert_from_path
-from PIL import Image
-from discord_webhook import DiscordWebhook, DiscordEmbed
+
+import fitz
+from discord_webhook import DiscordEmbed, DiscordWebhook
 from environs import Env  # For environment variables
+from pdf2jpg import pdf2jpg
+from PIL import Image
+from requests import get, post
 
 # Setting up environment variables
 env = Env()
@@ -16,13 +18,15 @@ def embed_to_discord(link):
     webhook = DiscordWebhook(url=env.list("WEBHOOKS"))
 
     # create embed object for webhook
-    title ="The New York Times Front Page"
-    day_today = now.strftime("%b. ") + str(int(now.strftime("%d"))) + now.strftime(", %Y")
+    title = "The New York Times Front Page"
+    day_today = now.strftime(
+        "%b. ") + str(int(now.strftime("%d"))) + now.strftime(", %Y")
     embed = DiscordEmbed(title=title, description=day_today, color="000000")
 
     # Mentioning the link to the article
-    embed.add_embed_field(name="Link", value= "[Read Full Page Here](" + link + ")", inline=False)
-    
+    embed.add_embed_field(
+        name="Link", value="[Read Full Page Here](" + link + ")", inline=False)
+
     # set image
     with open("out.png", "rb") as f:
         webhook.add_file(file=f.read(), filename='out.png')
@@ -38,17 +42,24 @@ def embed_to_discord(link):
 
 # Get todays date and get the link to todays paper
 now = datetime.now()
-link = "https://static01.nyt.com/images/" + now.strftime("%Y/%m/%d/") + "nytfrontpage/scan.pdf"
+link = "https://static01.nyt.com/images/" + \
+    now.strftime("%Y/%m/%d/") + "nytfrontpage/scan.pdf"
 
 f = open('Paper.pdf', "wb")
 f.write(get(link).content)
 f.close()
 
-pages = convert_from_path('Paper.pdf')
-for page in pages:
-    page.save('out.png', 'PNG')
+# To convert single page
+# result = pdf2jpg.convert_pdf2jpg('Paper.pdf', 'out.png', pages="1", dpi=300)
+# print(result)
 
-im = Image.open(".\out.png")
+doc = fitz.open("Paper.pdf")
+page = doc.loadPage(0)  # number of page
+pix = page.getPixmap()
+output = "out.png"
+pix.writePNG(output)
+
+im = Image.open("out.png")
 width, height = im.size
 
 # Setting the points for cropped image
@@ -58,7 +69,7 @@ right = width
 bottom = height
 
 im1 = im.crop((left, top, right, bottom))
-im1.save(".\out.png")
+im1.save('out.png')
 
 
 # defining the api-endpoint

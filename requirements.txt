@@ -1,4 +1,3 @@
-pdf2image
 Pillow
 discord_webhook
 environs
