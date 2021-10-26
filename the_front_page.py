@@ -54,9 +54,9 @@ f.close()
 # print(result)
 
 doc = fitz.open("Paper.pdf")
-page = doc.loadPage(0)  # number of page
-pix = page.getPixmap()
-pix.writePNG("out.png")
+page = doc.load_page(0)  # number of page
+pix = page.get_pixmap()
+pix.save("out.png")
 
 im = Image.open("out.png")
 width, height = im.size
