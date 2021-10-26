@@ -1,3 +1,4 @@
+fitz
 Pillow
 discord_webhook
 environs
