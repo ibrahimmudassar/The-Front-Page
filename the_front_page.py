@@ -13,9 +13,6 @@ env.read_env()  # read .env file, if it exists
 
 
 def embed_to_discord():
-    # Webhooks to send to
-    webhook = DiscordWebhook(url=env.list("WEBHOOKS"))
-
     # create embed object for webhook
     title = "The New York Times Front Page"
     day_today = now.strftime(
@@ -31,8 +28,11 @@ def embed_to_discord():
     embed.set_footer(text="\"All the News That's Fit to Print\"")
 
     # add embed object to webhook(s)
-    webhook.add_embed(embed)
-    webhook.execute()
+    # Webhooks to send to
+    for webhook_url in env.list("WEBHOOKS"):
+        webhook = DiscordWebhook(url=webhook_url)
+        webhook.add_embed(embed)
+        webhook.execute()
 
 
 # Get todays date and get the link to todays paper
