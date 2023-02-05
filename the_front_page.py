@@ -1,11 +1,9 @@
-import base64
 from datetime import datetime
 
 import fitz
 from discord_webhook import DiscordEmbed, DiscordWebhook
 from environs import Env  # For environment variables
-from PIL import Image
-from requests import get, post
+from requests import get
 
 # Setting up environment variables
 env = Env()
@@ -20,8 +18,6 @@ def embed_to_discord():
     embed = DiscordEmbed(title=title, description=day_today, color="000000")
 
     # set image
-    with open("out.png", "rb") as f:
-        webhook.add_file(file=f.read(), filename='out.png')
     embed.set_image(url='attachment://out.png')
 
     # set footer
@@ -31,6 +27,10 @@ def embed_to_discord():
     # Webhooks to send to
     for webhook_url in env.list("WEBHOOKS"):
         webhook = DiscordWebhook(url=webhook_url)
+
+        with open("out.png", "rb") as f:
+            webhook.add_file(file=f.read(), filename='out.png')
+
         webhook.add_embed(embed)
         webhook.execute()
 
