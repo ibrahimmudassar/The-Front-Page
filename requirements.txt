@@ -1,4 +1,3 @@
-pymupdf
 frontend
 pymupdf
 Pillow
