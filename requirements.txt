@@ -1,4 +1,4 @@
-fitz
+pymupdf
 frontend
 pymupdf
 Pillow
