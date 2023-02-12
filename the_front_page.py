@@ -13,8 +13,7 @@ env.read_env()  # read .env file, if it exists
 def embed_to_discord():
     # create embed object for webhook
     title = "The New York Times Front Page"
-    day_today = now.strftime(
-        "%b. ") + str(int(now.strftime("%d"))) + now.strftime(", %Y")
+    day_today = datetime.now().strftime("%b. %d, %Y")
     embed = DiscordEmbed(title=title, description=day_today, color="000000")
 
     # set image
@@ -36,18 +35,22 @@ def embed_to_discord():
 
 
 # Get todays date and get the link to todays paper
-now = datetime.now()
-link = "https://static01.nyt.com/images/" + \
-    now.strftime("%Y/%m/%d/") + "nytfrontpage/scan.pdf"
+now = datetime.now().strftime("%Y/%m/%d/")
+link = f"https://static01.nyt.com/images/{now}nytfrontpage/scan.pdf"
 
 f = open('Paper.pdf', "wb")
 f.write(get(link).content)
 f.close()
 
+# To get better resolution
+zoom_x = 2.0  # horizontal zoom
+zoom_y = 2.0  # vertical zoom
+mat = fitz.Matrix(zoom_x, zoom_y)  # zoom factor 2 in each dimension
+
 # To convert single page
 doc = fitz.open("Paper.pdf")
 page = doc.load_page(0)  # first and only page
-pix = page.get_pixmap()
+pix = page.get_pixmap(matrix=mat)
 pix.save("out.png")
 
 embed_to_discord()
