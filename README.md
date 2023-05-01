@@ -5,4 +5,5 @@
 Automates the front page of NYT everyday using a discord webhook
 
 I find the front page by link, download as pdf, convert to image, crop & send
+
 This uses a cron job to send before I wake up in the morning
