@@ -4,6 +4,7 @@ import fitz
 from discord_webhook import DiscordEmbed, DiscordWebhook
 from environs import Env  # For environment variables
 from requests import get
+from zoneinfo import ZoneInfo
 
 # Setting up environment variables
 env = Env()
@@ -35,7 +36,7 @@ def embed_to_discord():
 
 
 # Get todays date and get the link to todays paper
-now = datetime.now().strftime("%Y/%m/%d/")
+now = datetime.now(ZoneInfo("America/New_York")).strftime("%Y/%m/%d/")
 link = f"https://static01.nyt.com/images/{now}nytfrontpage/scan.pdf"
 
 f = open('Paper.pdf', "wb")
